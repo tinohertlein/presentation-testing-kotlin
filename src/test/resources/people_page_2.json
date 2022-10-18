@@ -1,0 +1,10 @@
+{
+  "next": null,
+  "results": [
+    {
+      "name": "R2-D2",
+      "url": "https://swapi.dev/api/people/3/",
+      "homeworld": "https://swapi.dev/api/planets/8/"
+    }
+  ]
+}

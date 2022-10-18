@@ -1,0 +1,9 @@
+{
+  "next": "https://swapi.dev/api/planets/?page=2",
+  "results": [
+    {
+      "name": "Tatooine",
+      "url": "https://swapi.dev/api/planets/1/"
+    }
+  ]
+}

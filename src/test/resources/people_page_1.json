@@ -1,0 +1,10 @@
+{
+  "next": "https://swapi.dev/api/people/?page=2",
+  "results": [
+    {
+      "name": "Luke Skywalker",
+      "url": "https://swapi.dev/api/people/1/",
+      "homeworld": "https://swapi.dev/api/planets/1/"
+    }
+  ]
+}

@@ -1,0 +1,291 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/hertleindev.css">
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css">
+</head>
+<body>
+<div class="reveal">
+    <div class="footer">
+        <a href="mailto:tino@hertlein.dev">tino@hertlein.dev</a>
+    </div>
+    <div class="slides">
+        <section>
+            <h2>Let our tests talk to us!</h2>
+            <hr>
+            <h4>Kotlin edition</h4>
+        </section>
+        <section>
+            <h3>The disclaimer</h3>
+        </section>
+
+        <section>
+            <h3>
+                What does 'Let our tests talk to us!' mean?
+            </h3>
+            <hr/>
+            <ul>
+                <li class="fragment fade-right">Test names have a concise structure (e.g. [methodname] should ...)</li>
+                <li class="fragment fade-right">Test names show expected behaviour</li>
+                <li class="fragment fade-right">Test methods have a concise structure, e.g.
+                    <ul>
+                        <li>Arrange, act ,assert</li>
+                        <li>Given, when, then</li>
+                    </ul>
+                </li>
+                <li class="fragment fade-right">Failing tests have a descriptive explanation</li>
+            </ul>
+        </section>
+
+        <section>
+            <section>
+                <h3>The sample app</h3>
+                <hr>
+                <div>
+                    A simple Almanach for
+                </div>
+                <div class="fragment fade-right">
+                    <img src="assets/starwars.svg">
+                </div>
+            </section>
+            <section>
+                <h3>The features</h3>
+                <hr/>
+                <table>
+                    <tr>
+                        <td align="center">Almanach().fetchCharacters()</td>
+                        <td align="center">Almanach().fetchPlanets()</td>
+                    </tr>
+                    <tr>
+                        <td align="center"><img src="assets/characters.png"></td>
+                        <td align="center"><img src="assets/planets.png"></td>
+                    </tr>
+                </table>
+            </section>
+            <section>
+                <h3>The architecture</h3>
+                <hr/>
+                <img src="assets/classes.png">
+            </section>
+        </section>
+
+        <section>
+            <section>
+                <h3>Which test output do you like more?</h3>
+                <hr>
+                <table>
+                    <tr>
+                        <td align="center"><img width="100" src="assets/like.png"></td>
+                        <td align="center"><img width="100" src="assets/love.png"></td>
+                    </tr>
+                    <tr>
+                        <td><img src="assets/without-nested-annotation.png"></td>
+                        <td><img src="assets/with-nested-annotation.png"></td>
+                    </tr>
+                </table>
+            </section>
+
+            <section>
+                <h3>Plain JUnit</h3>
+                <hr>
+                <div><img height="150" src="assets/without-nested-annotation.png"></div>
+                <pre><code data-trim>
+                    internal class AlmanachTestV0 {
+                        @Test
+                        fun `fetchCharacters should return empty list if web client returns no characters`()
+
+                        @Test
+                        fun `fetchCharacters should associate character and planet if web client returns character and its homeworld`()
+
+                        @Test
+                        fun `fetchPlanets should return empty list if web client returns no planets`()
+
+                        @Test
+                        fun `fetchPlanets should associate planet and character if web client returns planet and its inhabitant`()
+                    }
+                </code></pre>
+            </section>
+
+            <section>
+                <h3>Usage of @DisplayName, @Nested & inner class</h3>
+                <hr>
+                <div><img height="150" src="assets/with-nested-annotation.png"></div>
+                <pre><code data-trim data-line-numbers="1,4,5,14,15">
+                    @DisplayName("Almanach")
+                    internal class AlmanachTestV1 {
+
+                        @Nested
+                        inner class FetchCharacters {
+
+                            @Test
+                            fun `should return empty list if web client returns no characters`()
+
+                            @Test
+                            fun `should associate character and planet if web client returns character and its homeworld`()
+                        }
+
+                        @Nested
+                        inner class FetchPlanets {
+
+                            @Test
+                            fun `should return empty list if web client returns no planets`()
+
+                            @Test
+                            fun `should associate planet and character if web client returns planet and its inhabitant`()
+                        }
+                    }
+                 </code></pre>
+            </section>
+        </section>
+
+        <section>
+            <section>
+                <h3>Which test output do you like more?</h3>
+                <hr>
+                <table>
+                    <tr>
+                        <td align="center"><img width="100" src="assets/like.png"></td>
+                        <td align="center"><img width="100" src="assets/love.png"></td>
+                    </tr>
+                    <tr>
+                        <td><img height="100" src="assets/assertions-native-junit.png"></td>
+                        <td><img height="100" src="assets/assertions-assertj.png"></td>
+                    </tr>
+                </table>
+            </section>
+            <section>
+                <h3>Plain JUnit assertions</h3>
+                <hr>
+                <div>
+                    <img height="100" src="assets/assertions-native-junit.png">
+                </div>
+                <pre><code data-trim>
+                    assertTrue(characters.isEmpty())
+
+                    assertEquals(listOf(TestFixtures.Entities.LUKE), characters)
+
+                    assertThrows&lt;RuntimeException&gt;() {almanach.fetchCharacters()}
+                </code></pre>
+            </section>
+            <section>
+                <h3>AssertJ assertions</h3>
+                <hr>
+                <div>
+                    <img height="100" src="assets/assertions-assertj.png">
+                </div>
+                <pre><code data-trim>
+                    assertThat(characters).isEmpty()
+
+                    assertThat(characters).containsExactly(TestFixtures.Entities.LUKE)
+
+                    assertThatRuntimeException().isThrownBy {almanach.fetchCharacters()}
+                </code></pre>
+            </section>
+        </section>
+
+        <section>
+            <section>
+                <h3>Which mocking code do you like more?</h3>
+                <hr>
+                <table>
+                    <tr>
+                        <td align="center"><img width="100" src="assets/like.png"></td>
+                        <td align="center"><img width="100" src="assets/love.png"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <pre><code data-trim>
+                                `when`(webClient.fetchPlanets()).thenReturn(listOf(TATOOINE))
+                            </code></pre>
+                        </td>
+                        <td>
+                            <pre><code data-trim>
+                                every { webClient.fetchPlanets() } returns listOf(TATOOINE)
+                            </code></pre>
+                        </td>
+                    </tr>
+                </table>
+            </section>
+            <section>
+                <h3>Mockito</h3>
+                <hr>
+                <pre><code data-trim>
+                    `when`(webClient.fetchCharacters()).thenReturn(listOf(LUKE))
+
+                    doThrow(RuntimeException()).`when`(webClient.fetchCharacters())
+
+                    doNothing().`when`(webClient.fetchCharacters())
+
+                    verify(webClient).fetchCharacters()
+                </code></pre>
+            </section>
+            <section>
+                <h3>mockk</h3>
+                <hr>
+                <pre><code data-trim>
+                    every { webClient.fetchCharacters() } returns listOf(LUKE)
+
+                    every { webClient.fetchCharacters() } throws RuntimeException()
+
+                    every { webClient.fetchCharacters() } just runs
+
+                    verify { webClient.fetchCharacters() }
+                </code></pre>
+            </section>
+        </section>
+
+        <section>
+            <h3>More</h3>
+            <hr>
+            <ul>
+                <li>AssertJ: <a href="">https://assertj.github.io/doc/</a></li>
+                <li>Mockk: <a href="">https://mockk.io/</a></li>
+                <li>Home of the Star Wars Api: <a href="https://swapi.dev/api/">https://swapi.dev/api/</a></li>
+                <li>The presentation tool: <a href="https://revealjs.com/">reveal.js</a></li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>ROTI</h3>
+            <hr>
+            <table>
+                <tr>
+                    <td align="center"><img width="100" src="assets/like.png"></td>
+                    <td align="center"><img width="100" src="assets/love.png"></td>
+                </tr>
+                <tr>
+                    <td>I'm sorry, but this was more or less a waste of time!<br/>Thanks anyhow!</td>
+                    <td>Will try a few things out!<br/>Thanks!</td>
+                </tr>
+            </table>
+        </section>
+
+    </div>
+</div>
+
+<script src="dist/reveal.js"></script>
+<script src="plugin/notes/notes.js"></script>
+<script src="plugin/markdown/markdown.js"></script>
+<script src="plugin/highlight/highlight.js"></script>
+<script>
+    // More info about initialization & config:
+    // - https://revealjs.com/initialization/
+    // - https://revealjs.com/config/
+    Reveal.initialize({
+        hash: true,
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+    });
+</script>
+</body>
+</html>

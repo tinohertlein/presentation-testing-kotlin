@@ -1,0 +1,22 @@
+@startuml
+
+skinparam monochrome true
+skinparam handwritten true
+
+class Almanach {
+    fetchCharacters(): List<Character>
+    fetchPlanets(): List<Planet>
+}
+class StarWarsApiClient
+{
+    fetchCharacters(): List<CharacterDto>
+    fetchPlanets(): List<PlanetDto>
+}
+circle StarWarsAPI
+
+note bottom of StarWarsAPI: https://swapi.dev/
+
+Almanach ..> StarWarsApiClient: use
+StarWarsApiClient ..> StarWarsAPI : use
+
+@enduml
